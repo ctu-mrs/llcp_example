@@ -29,6 +29,9 @@
       <param name="enable_profiler" type="bool" value="$(arg profiler)" />
       <param name="use_timeout" value="false"/>
 
+      <remap from="~llcp_in" to="llcp/received_message" />
+      <remap from="~llcp_out" to="llcp/send_message" />
+
     </node>
 
   </group>

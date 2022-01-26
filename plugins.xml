@@ -1,5 +1,5 @@
 <library path="lib/libLlcpExample">
-  <class name="llcp_ros/LlcpExample" type="llcp_example::LlcpExample" base_class_type="nodelet::Nodelet">
+  <class name="llcp_example/LlcpExample" type="llcp_example::LlcpExample" base_class_type="nodelet::Nodelet">
     <description>LlcpExample nodelet</description>
   </class>
 </library>
