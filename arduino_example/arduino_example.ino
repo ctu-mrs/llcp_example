@@ -11,7 +11,7 @@ LLCP_Message_t llcp_message_in;
 
 uint8_t             my_data1_uint8 = 42;
 uint32_t             my_data2_uint32 = 420;
-double               my_data3_double = 420.69;
+float               my_data3_float = 420.69;
 uint16_t num_msg_received = 0;
 
 void setup() {
@@ -61,7 +61,7 @@ void send_data() {
   // fill the message with data
   my_msg.data1_uint8 = my_data1_uint8;
   my_msg.data2_uint32 = my_data2_uint32;
-  my_msg.data3_double = my_data3_double;
+  my_msg.data3_float = my_data3_float;
 
   //llcp_prepareMessage will fill your TX buffer while returning the number of bytes written
   msg_len = llcp_prepareMessage((uint8_t*)&my_msg, sizeof(my_msg), tx_buffer, my_msg.id);
@@ -91,7 +91,7 @@ bool receive_message(LLCP_Message_t* llcp_message_in) {
 
               my_data1_uint8 = received_msg->data1_uint8;
               my_data2_uint32 = received_msg->data2_uint32;
-              my_data3_double = received_msg->data3_double;
+              my_data3_float = received_msg->data3_float;
 
               num_msg_received++;
               got_valid_msg = true;

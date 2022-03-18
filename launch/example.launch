@@ -5,12 +5,12 @@
   <arg name="profiler" default="$(optenv PROFILER false)" />
 
 
-  <!-- will it run using GNU debugger? -->
+    <!-- will it run using GNU debugger? -->
   <arg name="DEBUG" default="false" />
   <arg unless="$(arg DEBUG)" name="launch_prefix_debug" value=""/>
   <arg     if="$(arg DEBUG)" name="launch_prefix_debug" value="debug_roslaunch"/>
 
-  <!-- will it run as standalone nodelet or using a nodelet manager? -->
+    <!-- will it run as standalone nodelet or using a nodelet manager? -->
   <arg name="standalone" default="true" />
   <arg name="manager" default="$(arg UAV_NAME)_llcp_manager" />
   <arg name="n_threads" default="8" />
@@ -35,5 +35,12 @@
     </node>
 
   </group>
+
+  <include file="$(find mrs_llcp_ros)/launch/llcp.launch" >
+
+    <arg name="baudrate" value="115200" />
+    <arg name="portname" value="/dev/arduino" />
+
+  </include>
 
 </launch>
