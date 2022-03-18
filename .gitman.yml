@@ -8,7 +8,7 @@ sources:
       -
     links:
       - source: ''
-        target: mrs_llcp
+        target: arduino_example/mrs_llcp
     scripts:
       - git submodule update --init --recursive
 sources_locked:
@@ -20,7 +20,7 @@ sources_locked:
       -
     links:
       - source: ''
-        target: mrs_llcp
+        target: arduino_example/mrs_llcp
     scripts:
       - git submodule update --init --recursive
 default_group: ''
