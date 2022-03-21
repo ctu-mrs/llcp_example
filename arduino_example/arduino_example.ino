@@ -7,12 +7,13 @@
 uint8_t tx_buffer[TX_BUFFER_LEN];
 
 LLCP_Receiver_t llcp_receiver;
-LLCP_Message_t llcp_message_in;
 
 uint8_t             my_data1_uint8 = 42;
 uint32_t             my_data2_uint32 = 420;
 float               my_data3_float = 420.69;
 uint16_t num_msg_received = 0;
+
+long last_hb = millis();
 
 void setup() {
 
@@ -25,13 +26,16 @@ void setup() {
 
 void loop() {
 
-  if (receive_message(&llcp_message_in)) {
+  if (receive_message()) {
     send_data();
   }
 
-  send_heartbeat();
-  delay(1000);
+  if (millis() - last_hb >= 1000) {
+    last_hb = millis();
+    send_heartbeat();
+  }
 
+  delay(10);
 }
 
 void send_heartbeat() {
@@ -72,22 +76,24 @@ void send_data() {
   }
 }
 
-bool receive_message(LLCP_Message_t* llcp_message_in) {
+bool receive_message() {
   uint16_t msg_len;
   bool got_valid_msg = false;
+  LLCP_Message_t* llcp_message_ptr;
 
   while (Serial.available() > 0) {
     bool checksum_matched;
     uint8_t char_in = Serial.read();
 
-
     //individual chars are processed one by one by llcp, if a complete message is received, llcp_processChar() returns true
-    if (llcp_processChar(char_in, &llcp_receiver, &llcp_message_in, &checksum_matched)) {
+    if (llcp_processChar(char_in, &llcp_receiver, &llcp_message_ptr, &checksum_matched)) {
       if (checksum_matched) {
-        switch (llcp_message_in->id) {
+        num_msg_received++;
+        return true;
+        switch (llcp_message_ptr->id) {
           case data_msg::id: {
 
-              data_msg *received_msg = (data_msg *)llcp_message_in->payload;
+              data_msg *received_msg = (data_msg *)llcp_message_ptr;
 
               my_data1_uint8 = received_msg->data1_uint8;
               my_data2_uint32 = received_msg->data2_uint32;

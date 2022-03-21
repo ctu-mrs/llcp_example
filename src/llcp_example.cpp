@@ -89,16 +89,22 @@ void LlcpExample::callbackReceiveMessage(const mrs_msgs::LlcpConstPtr &msg) {
 
       data_msg *received_msg = (data_msg *)payload_array;
 
-      ROS_INFO_STREAM("[LlcpExample]: Received data message -> data1_uint8: " << unsigned(received_msg->data1_uint8) << ", data2_uint32: " << received_msg->data2_uint32
-                                                                              << ", data3_float: " << received_msg->data3_float);
+      /* ROS_INFO_STREAM("[LlcpExample]: Received data message -> data1_uint8: " << unsigned(received_msg->data1_uint8) << ", data2_uint32: " << received_msg->data2_uint32 */
+                                                                              /* << ", data3_float: " << received_msg->data3_float); */
       break;
     }
     case heartbeat_msg::id: {
-      ROS_INFO("[LlcpExample]: Received Heartbeat message");
+      heartbeat_msg *received_msg = (heartbeat_msg *)payload_array;
+      received_msg->messages_received;
+      ROS_INFO_STREAM("[LlcpExample]: Received Heartbeat message, " << int(received_msg->messages_received));
+      break;
+    }
+    case error_msg::id: {
+      ROS_ERROR_STREAM("[LlcpExample]: Error msg");
       break;
     }
     default: {
-      ROS_INFO("[LlcpExample]: default");
+      /* ROS_INFO("[LlcpExample]: default"); */
       break;
     }
   }
@@ -133,8 +139,8 @@ void LlcpExample::callbackSendTimer(const ros::TimerEvent &event) {
     llcp_msg.payload.push_back(msg_ptr[i]);
   }
 
-  ROS_INFO_STREAM("[LlcpExample]: Sending data message -> data1_uint8: " << unsigned(msg_out.data1_uint8) << ", data2_uint32: " << msg_out.data2_uint32
-                                                                         << ", data3_float: " << msg_out.data3_float);
+  /* ROS_INFO_STREAM("[LlcpExample]: Sending data message -> data1_uint8: " << unsigned(msg_out.data1_uint8) << ", data2_uint32: " << msg_out.data2_uint32 */
+                                                                         /* << ", data3_float: " << msg_out.data3_float); */
   llcp_publisher_.publish(llcp_msg);
 }
 
