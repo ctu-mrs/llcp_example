@@ -32,7 +32,7 @@ private:
 
   uint8_t  my_data1_uint8  = 10;
   uint32_t my_data2_uint32 = 1000;
-  float   my_data3_float    = 142.46;
+  float    my_data3_float  = 142.46;
 
   bool is_initialized_ = false;
 };
@@ -80,31 +80,27 @@ void LlcpExample::callbackReceiveMessage(const mrs_msgs::LlcpConstPtr &msg) {
   }
 
   // llcp is working with arrays, so we need to convert the payload from the ROS message into an array
-  uint8_t              payload_size = msg->payload.size();
-  uint8_t              payload_array[payload_size];
+  uint8_t payload_size = msg->payload.size();
+  uint8_t payload_array[payload_size];
   std::copy(msg->payload.begin(), msg->payload.end(), payload_array);
 
-  switch (msg->id) {
-    case data_msg::id: {
+  switch (payload_array[0]) {
+    case DATA_MSG_ID: {
 
       data_msg *received_msg = (data_msg *)payload_array;
 
-      /* ROS_INFO_STREAM("[LlcpExample]: Received data message -> data1_uint8: " << unsigned(received_msg->data1_uint8) << ", data2_uint32: " << received_msg->data2_uint32 */
-                                                                              /* << ", data3_float: " << received_msg->data3_float); */
+      ROS_INFO_STREAM("[LlcpExample]: Received data message -> data1_uint8: " << unsigned(received_msg->data1_uint8) << ", data2_uint32: "
+                                                                              << received_msg->data2_uint32 << ", data3_float: " << received_msg->data3_float);
       break;
     }
-    case heartbeat_msg::id: {
+    case HEARTBEAT_MSG_ID: {
       heartbeat_msg *received_msg = (heartbeat_msg *)payload_array;
       received_msg->messages_received;
       ROS_INFO_STREAM("[LlcpExample]: Received Heartbeat message, " << int(received_msg->messages_received));
       break;
     }
-    case error_msg::id: {
-      ROS_ERROR_STREAM("[LlcpExample]: Error msg");
-      break;
-    }
     default: {
-      /* ROS_INFO("[LlcpExample]: default"); */
+      ROS_ERROR_STREAM("[LlcpExample]: Received unknown message with id " << int(payload_array[0]));
       break;
     }
   }
@@ -124,7 +120,7 @@ void LlcpExample::callbackSendTimer(const ros::TimerEvent &event) {
 
   msg_out.data1_uint8  = my_data1_uint8;
   msg_out.data2_uint32 = my_data2_uint32;
-  msg_out.data3_float = my_data3_float;
+  msg_out.data3_float  = my_data3_float;
 
   my_data1_uint8++;
   my_data2_uint32 += 10;
@@ -139,8 +135,8 @@ void LlcpExample::callbackSendTimer(const ros::TimerEvent &event) {
     llcp_msg.payload.push_back(msg_ptr[i]);
   }
 
-  /* ROS_INFO_STREAM("[LlcpExample]: Sending data message -> data1_uint8: " << unsigned(msg_out.data1_uint8) << ", data2_uint32: " << msg_out.data2_uint32 */
-                                                                         /* << ", data3_float: " << msg_out.data3_float); */
+  ROS_INFO_STREAM("[LlcpExample]: Sending data message -> data1_uint8: " << unsigned(msg_out.data1_uint8) << ", data2_uint32: " << msg_out.data2_uint32
+                                                                         << ", data3_float: " << msg_out.data3_float);
   llcp_publisher_.publish(llcp_msg);
 }
 

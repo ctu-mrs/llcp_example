@@ -1,5 +1,7 @@
-
+extern "C" {
 #include <llcp.h>
+}
+
 #include "example_msgs.h"
 
 
@@ -49,7 +51,7 @@ void send_heartbeat() {
   my_msg.messages_received = num_msg_received;
 
   //llcp_prepareMessage will fill your TX buffer while returning the number of bytes written
-  msg_len = llcp_prepareMessage((uint8_t*)&my_msg, sizeof(my_msg), tx_buffer, my_msg.id);
+  msg_len = llcp_prepareMessage((uint8_t*)&my_msg, sizeof(my_msg), tx_buffer);
 
   //send the message out over the serial line
   for (int i = 0; i < msg_len; i++) {
@@ -68,7 +70,7 @@ void send_data() {
   my_msg.data3_float = my_data3_float;
 
   //llcp_prepareMessage will fill your TX buffer while returning the number of bytes written
-  msg_len = llcp_prepareMessage((uint8_t*)&my_msg, sizeof(my_msg), tx_buffer, my_msg.id);
+  msg_len = llcp_prepareMessage((uint8_t*)&my_msg, sizeof(my_msg), tx_buffer);
 
   //send the message out over the serial line
   for (int i = 0; i < msg_len; i++) {
@@ -89,9 +91,8 @@ bool receive_message() {
     if (llcp_processChar(char_in, &llcp_receiver, &llcp_message_ptr, &checksum_matched)) {
       if (checksum_matched) {
         num_msg_received++;
-        return true;
         switch (llcp_message_ptr->id) {
-          case data_msg::id: {
+          case DATA_MSG_ID: {
 
               data_msg *received_msg = (data_msg *)llcp_message_ptr;
 
@@ -99,16 +100,16 @@ bool receive_message() {
               my_data2_uint32 = received_msg->data2_uint32;
               my_data3_float = received_msg->data3_float;
 
-              num_msg_received++;
               got_valid_msg = true;
               break;
             }
-          case heartbeat_msg::id: {
-              num_msg_received++;
+          case HEARTBEAT_MSG_ID: {
               got_valid_msg = true;
               break;
             }
         }
+
+        return true;
       }
     }
   }
