@@ -91,7 +91,7 @@ bool receive_message() {
     if (llcp_processChar(char_in, &llcp_receiver, &llcp_message_ptr, &checksum_matched)) {
       if (checksum_matched) {
         num_msg_received++;
-        switch (llcp_message_ptr->id) {
+        switch (llcp_message_ptr->payload[0]) {
           case DATA_MSG_ID: {
 
               data_msg *received_msg = (data_msg *)llcp_message_ptr;

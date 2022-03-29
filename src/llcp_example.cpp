@@ -127,7 +127,6 @@ void LlcpExample::callbackSendTimer(const ros::TimerEvent &event) {
   my_data3_float += 10.5;
 
   mrs_msgs::Llcp llcp_msg;
-  llcp_msg.id = msg_out.id;
 
   uint8_t *msg_ptr = (uint8_t *)&msg_out;
 
