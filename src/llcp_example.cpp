@@ -64,6 +64,7 @@ void LlcpExample::onInit() {
   send_timer_ = nh_.createTimer(ros::Rate(1), &LlcpExample::callbackSendTimer, this);
 
   is_initialized_ = true;
+
 }
 //}
 
@@ -118,6 +119,7 @@ void LlcpExample::callbackSendTimer(const ros::TimerEvent &event) {
 
   data_msg msg_out;
 
+  msg_out.id  = DATA_MSG_ID;
   msg_out.data1_uint8  = my_data1_uint8;
   msg_out.data2_uint32 = my_data2_uint32;
   msg_out.data3_float  = my_data3_float;
@@ -133,6 +135,8 @@ void LlcpExample::callbackSendTimer(const ros::TimerEvent &event) {
   for (int i = 0; i < sizeof(msg_out); i++) {
     llcp_msg.payload.push_back(msg_ptr[i]);
   }
+
+  ROS_INFO_STREAM("[LlcpExample]: Sending data message -> id: " << int(msg_out.id));
 
   ROS_INFO_STREAM("[LlcpExample]: Sending data message -> data1_uint8: " << unsigned(msg_out.data1_uint8) << ", data2_uint32: " << msg_out.data2_uint32
                                                                          << ", data3_float: " << msg_out.data3_float);

@@ -47,6 +47,7 @@ void send_heartbeat() {
 
   // fill the message with data
 
+  my_msg.id = HEARTBEAT_MSG_ID;
   my_msg.is_running = true;
   my_msg.messages_received = num_msg_received;
 
@@ -65,6 +66,7 @@ void send_data() {
   uint16_t msg_len;
 
   // fill the message with data
+  my_msg.id = DATA_MSG_ID;
   my_msg.data1_uint8 = my_data1_uint8;
   my_msg.data2_uint32 = my_data2_uint32;
   my_msg.data3_float = my_data3_float;
