@@ -31,6 +31,8 @@
 
       <remap from="~llcp_in" to="llcp/received_message" />
       <remap from="~llcp_out" to="llcp/send_message" />
+      <remap from="~set_servo_in" to="~set_servo" />
+      <remap from="~set_trigger_in" to="~set_trigger" />
 
     </node>
 
