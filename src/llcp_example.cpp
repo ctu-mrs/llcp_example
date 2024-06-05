@@ -1,8 +1,8 @@
 #include <ros/package.h>
 #include <ros/ros.h>
-#include <mrs_msgs/Llcp.h>
-#include <mrs_msgs/SetTrigger.h>
-#include <mrs_msgs/SetServo.h>
+#include <mrs_modules_msgs/Llcp.h>
+#include <mrs_modules_msgs/SetTrigger.h>
+#include <mrs_modules_msgs/SetServo.h>
 
 #include <string>
 
@@ -22,9 +22,9 @@ public:
   virtual void onInit();
 
 private:
-  void callbackReceiveMessage(const mrs_msgs::LlcpConstPtr &msg);
-  bool callbackSetServo(mrs_msgs::SetServo::Request &req, mrs_msgs::SetServo::Response &res);
-  bool callbackSetTrigger(mrs_msgs::SetTrigger::Request &req, mrs_msgs::SetTrigger::Response &res);
+  void callbackReceiveMessage(const mrs_modules_msgs::LlcpConstPtr &msg);
+  bool callbackSetServo(mrs_modules_msgs::SetServo::Request &req, mrs_modules_msgs::SetServo::Response &res);
+  bool callbackSetTrigger(mrs_modules_msgs::SetTrigger::Request &req, mrs_modules_msgs::SetTrigger::Response &res);
 
   ros::NodeHandle nh_;
 
@@ -49,7 +49,7 @@ void LlcpExample::onInit() {
   ros::Time::waitForValid();
 
   // Publishers
-  llcp_publisher_ = nh_.advertise<mrs_msgs::Llcp>("llcp_out", 1);
+  llcp_publisher_ = nh_.advertise<mrs_modules_msgs::Llcp>("llcp_out", 1);
 
   llcp_subscriber_ = nh_.subscribe("llcp_in", 10, &LlcpExample::callbackReceiveMessage, this, ros::TransportHints().tcpNoDelay());
 
@@ -67,7 +67,7 @@ void LlcpExample::onInit() {
 
 /* //{ callbackSetServo() */
 
-bool LlcpExample::callbackSetServo(mrs_msgs::SetServo::Request &req, mrs_msgs::SetServo::Response &res) {
+bool LlcpExample::callbackSetServo(mrs_modules_msgs::SetServo::Request &req, mrs_modules_msgs::SetServo::Response &res) {
 
   if (!is_initialized_) {
     res.success = false;
@@ -80,7 +80,7 @@ bool LlcpExample::callbackSetServo(mrs_msgs::SetServo::Request &req, mrs_msgs::S
   msg_out.servo1_pos = req.servo1_val;
   msg_out.servo2_pos = req.servo2_val;
 
-  mrs_msgs::Llcp llcp_msg;
+  mrs_modules_msgs::Llcp llcp_msg;
 
   uint8_t *msg_ptr = (uint8_t *)&msg_out;
 
@@ -100,7 +100,7 @@ bool LlcpExample::callbackSetServo(mrs_msgs::SetServo::Request &req, mrs_msgs::S
 
 /* //{ callbackSetTrigger() */
 
-bool LlcpExample::callbackSetTrigger(mrs_msgs::SetTrigger::Request &req, mrs_msgs::SetTrigger::Response &res) {
+bool LlcpExample::callbackSetTrigger(mrs_modules_msgs::SetTrigger::Request &req, mrs_modules_msgs::SetTrigger::Response &res) {
 
   if (!is_initialized_) {
     res.success = false;
@@ -114,7 +114,7 @@ bool LlcpExample::callbackSetTrigger(mrs_msgs::SetTrigger::Request &req, mrs_msg
   msg_out.trigger     = req.trigger;
 
 
-  mrs_msgs::Llcp llcp_msg;
+  mrs_modules_msgs::Llcp llcp_msg;
 
   uint8_t *msg_ptr = (uint8_t *)&msg_out;
 
@@ -134,7 +134,7 @@ bool LlcpExample::callbackSetTrigger(mrs_msgs::SetTrigger::Request &req, mrs_msg
 
 /* callbackReceiveMessage() //{ */
 
-void LlcpExample::callbackReceiveMessage(const mrs_msgs::LlcpConstPtr &msg) {
+void LlcpExample::callbackReceiveMessage(const mrs_modules_msgs::LlcpConstPtr &msg) {
 
   if (!is_initialized_) {
     return;
